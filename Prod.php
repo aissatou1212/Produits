@@ -4,32 +4,29 @@ if(!isset($_SESSION["Produits"])){
   $_SESSION["Produits"] = [];
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
   if(isset($_POST["Ajouter"])){
-  if (isset($_POST['libelle'], $_POST['prix'], $_POST['code'], $_POST['quantite'])) {
-      
-      $libelle = $_POST['libelle'];
-      $prix = $_POST['prix'];
-      $code = $_POST['code'];
-      $quantite = $_POST['quantite'];
-      
+    $montant = $_POST["prix"] * $_POST["quantite"];
       $Produits = [
-          "libelle" => $libelle,
-          "prix" => $prix,
-          "code" => $code,
-          "quantite" => $quantite,
-          "montant" => $prix * $quantite,  
-          "mttc" => $prix * $quantite * 0.18
+          "libelle" => $_POST["libelle"],
+          "prix" => $_POST["prix"],
+          "quantite" => $_POST["quantite"],
+          "montant" => $montant,  
+          "mttc" => $montant + $montant * 0.18
       ];
-      $_SESSION["Produits"][] = $Produits;
+      
+      $_SESSION["Produits"][]= $Produits;  
   }
+  
+  
 }
-  $_SESSION["Produits"][]= $Produits;
+
+  
   if(isset($_POST["vider"])){
    $_SESSION["Produits"]= [];
    
   }
-}
+
 ?>
 
 
@@ -61,11 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
   </nav>
   <div class="container">
-    <form method="post" action="Prod.php">
+    <form method="POST" action="Prod.php">
     <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Libelle</label>
-    <input type="text" class="form-control">
-    <div id="emailHelp" name= "libelle" class="form-text">We'll never share your email with anyone else.</div>
+    <input type="text" name= "libelle" class="form-control">
   </div>
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Prix</label>
@@ -75,16 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <label for="exampleInputPassword1" class="form-label">Quantite</label>
     <input type="text" name="quantite" class="form-control">
   </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Montant</label>
-    <input type="text" name="montant" class="form-control" >
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">MTTC</label>
-    <input type="text" name="mttc" class="form-control">
-  </div>
   
-  <button type="submit" name= "Ajouter" class="btn btn-primary">Ajouter</button>
+  
+  
+  <button type="submit" name="Ajouter" class="btn btn-primary">Ajouter</button>
 </form>
 
       <table class="table table-bordered border-Sombre">
@@ -101,11 +91,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php
             foreach ($_SESSION["Produits"] as $value):?>
             <tr>
-              <td><?= htmlspecialchars($value["libelle"])?></td>
-              <td><?= htmlspecialchars($value["prix"])?></td>
-              <td><?= htmlspecialchars($value["quantite"])?></td>
-              <td><?= htmlspecialchars($value["montant"])?></td>
-              <td><?= htmlspecialchars($value["mttc"])?></td>
+              <td><?= $value["libelle"]?></td>
+              <td><?= $value["prix"]?></td>
+              <td><?= $value["quantite"]?></td>
+              <td><?= $value["montant"]?></td>
+              <td><?= $value["mttc"]?></td>
             </tr>
             <?php endforeach; ?>
           </tbody>
